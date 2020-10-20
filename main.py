@@ -2,8 +2,35 @@ import os, sys, math, random
 import torch, cv2, trimesh
 
 def detect_marker(img_rgb, img_depth):
+    # Detect where to place the object in the image.
+    # We may have to physically place a marker in the scene
+    # Return x, y coordinates, specifing the pixel
     pass
 
+def compute_virtual_obj_sh(virtual_obj):
+    # Assume a simple material model for the object. For starters, make a uniform material (textures can be added later).
+    # Compute SH coefs using MC integration. If uniform material, only 1 set of SH coefs. for the object.
+    # This is potentially a precomputation, so doesnt matter if its computationally expensive.
+    pass
+
+def compute_envmap_sh(img_rgb, img_depth):
+    # Use the network from the following paper
+    # "Inverse Rendering for Complex Indoor Scenes: Shape, Spatially-Varying Lighting and SVBRDF from a Single Image"
+    pass
+
+def detect_near_field(img_rgb, img_depth):
+    # Use a simple YCbCr conversion, and threshold on the luma (Y) value.
+    # Approximate with a polygon and return
+    pass
+
+def compute_near_field_sh(img_rgb, img_depth, light):
+    # Use the following paper
+    # "analytic spherical harmonic coefficients for polygonal area lights"
+    pass
+
+def compose(img_rgb, img_depth, virtual_obj_sh, env_map_sh, near_field_sh):
+    # Depth aware compositing. Needs more thought, not very sure what to do.
+    pass
 
 if __name__ == '__main__':
     # Process one frame, can easily be extended to a video
