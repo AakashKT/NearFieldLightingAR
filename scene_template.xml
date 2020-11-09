@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<scene version="2.0.0">
+    <integrator type="$integrator">
+    </integrator>
+    
+    <sensor type="perspective" id="camera"> 
+        <float name="fov" value="$fov"/>
+        <transform name="to_world">
+            <lookat target="$tx, $ty, $tz"
+                    origin="$ox, $oy, $oz"
+                    up="$ux, $uy, $uz"/>
+        </transform>
+        
+        <sampler type="independent">
+            <integer name="sample_count" value="$spp"/>
+        </sampler>
+        
+        <film type="hdrfilm" id="film">
+            <integer name="width" value="$width"/>
+            <integer name="height" value="$height"/>
+            <string name="pixel_format" value="rgb"/>
+        </film>
+    </sensor>
+
+    <emitter type="constant" id="emitter-envmap">
+        <float name="radiance" value="1" />
+    </emitter>
+    
+    <shape version="2.0.0" type="obj" id="obj_1">
+        <string name="filename" value="$obj_file"/>
+        <bsdf type="roughconductor">
+            <rgb name="specular_reflectance" value="0.5, 0.5, 0.5"/>
+            <float name="alpha" value="1.0"/>
+        </bsdf>
+    </shape>
+
+</scene>

@@ -1,3 +1,8 @@
 *.pth
 *.gz
 *.exr
+*.JPG
+*.jpg
+*.png
+*.npy
+__pycache__/
