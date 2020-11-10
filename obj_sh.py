@@ -86,10 +86,54 @@ class AuxIntegrator(SamplingIntegrator):
     def __init__(self, props):
         SamplingIntegrator.__init__(self, props)
 
+        self.light = None
+        self.light_radiance = None
+
     def sample(self, scene, sampler, ray, medium=None, active=True):
         result = Vector3f(0.0)
         si = scene.ray_intersect(ray, active)
         active = si.is_valid() & active
+
+        # emitter = si.emitter(scene)
+        # result = ek.select(active, Emitter.eval_vec(emitter, si, active), Vector3f(0.0))
+
+        # z_axis = np.array([0, 0, 1])
+        
+        # vertex = si.p.numpy()
+        # v_count = vertex.shape[0]
+        # vertex = np.expand_dims(vertex, axis=1)
+        # vertex = np.repeat(vertex, self.light.vertex_count(), axis=1)
+        
+        # light_vertices = self.light.vertex_positions_buffer().numpy().reshape(self.light.vertex_count(), 3)
+        # light_vertices = np.expand_dims(light_vertices, axis=0)
+        # light_vertices = np.repeat(light_vertices, v_count, axis=0)
+        
+        # sph_polygons = light_vertices - vertex
+        # sph_polygons = sph_polygons / np.linalg.norm(sph_polygons, axis=2, keepdims=True)
+        
+        # z_axis = np.repeat( np.expand_dims(z_axis, axis=0), v_count, axis=0 )
+        # result_np = np.zeros(v_count, dtype=np.double)
+        
+        # for idx in range( self.light.vertex_count() ):
+        #     idx1 = (idx+1) % self.light.vertex_count()
+        #     idx2 = (idx) % self.light.vertex_count()
+            
+        #     dp = np.sum( sph_polygons[:, idx1, :] * sph_polygons[:, idx2, :], axis=1 )
+        #     acos = np.arccos(dp)
+            
+        #     cp = np.cross( sph_polygons[:, idx1, :], sph_polygons[:, idx2, :] )
+        #     cp = cp / np.linalg.norm(cp, axis=1, keepdims=True)
+            
+        #     dp = np.sum( cp * z_axis, axis=1 )
+            
+        #     result_np += acos * dp
+                        
+        # result_np *= 0.5 * 1.0/math.pi
+        # result_np = np.repeat( result_np.reshape((v_count, 1)), 3, axis=1 )
+        
+        # fin = self.light_radiance * Vector3f(result_np)
+        # fin[fin < 0] = 0
+        # result += ek.select(active, fin, Vector3f(0.0))
 
         ctx = BSDFContext()
         bsdf = si.bsdf(ray)
@@ -121,9 +165,6 @@ class AuxIntegrator(SamplingIntegrator):
         y_2_p1_ = y_2_p1(bsdf_val, wo_theta, wo_phi) / ek.select(pdf > 0, pdf, Float(0.01))
         y_2_p2_ = y_2_p2(bsdf_val, wo_theta, wo_phi) / ek.select(pdf > 0, pdf, Float(0.01))
 
-        result.x = si.uv.x
-        result.y = si.uv.y
-
         return result, si.is_valid(), [ Float(y_0_0_[0]), Float(y_0_0_[1]), Float(y_0_0_[2]),\
                                         Float(y_1_n1_[0]), Float(y_1_n1_[1]), Float(y_1_n1_[2]),\
                                         Float(y_1_0_[0]), Float(y_1_0_[1]), Float(y_1_0_[2]),\
@@ -146,14 +187,19 @@ class AuxIntegrator(SamplingIntegrator):
         return "AuxIntegrator[]"
 
 def compute_sh(obj_file, cam_pos, cam_lookat):
+    light_radiance = 1.0
+
     register_integrator('auxintegrator', lambda props: AuxIntegrator(props))
 
     scene_template_file = './scene_template.xml'
     Thread.thread().file_resolver().append(os.path.dirname(scene_template_file))
 
     scene = load_file(scene_template_file, integrator='auxintegrator', fov="40", tx=cam_lookat[0], ty=cam_lookat[1], tz=cam_lookat[2], \
-                        ox=cam_pos[0], oy=cam_pos[1], oz=cam_pos[2], ux="0", uy="1", uz="0", spp="60", \
-                        width=200, height=200, obj_file=obj_file)
+                        spp="100", width=200, height=200, obj_file=obj_file)
+
+    # scene.integrator().light = load_string(LIGHT_TEMPLATE, lsx="1", lsy="1", lsz="1", lrx="0", lry="0", lrz="0", ltx="-1", lty="0", ltz="0", l=light_radiance)
+    # scene.integrator().light_radiance = light_radiance
+
     scene.integrator().render(scene, scene.sensors()[0])
     film = scene.sensors()[0].film()
     film.set_destination_file('./render_output.exr')

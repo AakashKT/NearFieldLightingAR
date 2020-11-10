@@ -6,3 +6,4 @@
 *.png
 *.npy
 __pycache__/
+drawio/

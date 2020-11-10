@@ -6,9 +6,9 @@
     <sensor type="perspective" id="camera"> 
         <float name="fov" value="$fov"/>
         <transform name="to_world">
-            <lookat target="$tx, $ty, $tz"
-                    origin="$ox, $oy, $oz"
-                    up="$ux, $uy, $uz"/>
+            <lookat target="0, 0, 0"
+                    origin="0, 0, 3.1"
+                    up="0, 1, 0"/>
         </transform>
         
         <sampler type="independent">
@@ -25,6 +25,21 @@
     <emitter type="constant" id="emitter-envmap">
         <float name="radiance" value="1" />
     </emitter>
+
+    <!-- <shape version="2.0.0" type="obj" id="light">
+        <string name="filename" value="light.obj"/>
+        <transform name="to_world">
+            <scale value="$lsx $lsy $lsz"/>
+            <rotate x="1" angle="$lrx"/>
+            <rotate y="1" angle="$lry"/>
+            <rotate z="1" angle="$lrz"/>
+            <translate z="$ltz" x="$ltx" y="$lty"/>
+        </transform>
+        
+        <emitter type="area">
+            <spectrum name="radiance" value="$l"/>
+        </emitter>
+    </shape> -->
     
     <shape version="2.0.0" type="obj" id="obj_1">
         <string name="filename" value="$obj_file"/>
@@ -32,6 +47,9 @@
             <rgb name="specular_reflectance" value="0.5, 0.5, 0.5"/>
             <float name="alpha" value="1.0"/>
         </bsdf>
+        <transform name="to_world">
+            <translate x="$tx" y="$ty" z="$tz" />
+        </transform>
     </shape>
 
 </scene>

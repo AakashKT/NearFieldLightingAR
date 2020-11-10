@@ -14,6 +14,12 @@ def detect_marker(img_rgb, img_depth):
         return [352, 352]
     elif 'img3' in img_path:
         return [690, 188]
+    elif 'img4' in img_path:
+        return [216, 309]
+    elif 'img5' in img_path:
+        return [190, 345]
+    elif 'img6' in img_path:
+        return [250, 250]
 
 def compute_virtual_obj_sh(obj_file, cam_pos, cam_lookat):
     # Assume a simple material model for the object. For starters, make a uniform material (textures can be added later).
@@ -52,14 +58,19 @@ def load_images(img_path, img_depth_path):
     return img_rgb, img_depth
 
 def compute_camera(img_path, img_rgb, img_depth):
-    if 'img1' in img_path or 'img2' in img_path:
+    if 'img1' in img_path or 'img2' in img_path or 'img6' in img_path:
         cam_pos = [3, 3, 3]
         cam_lookat = [0, 0, 0]
 
         return cam_pos, cam_lookat
-    elif 'img3' in img_path:
-        cam_pos = [-0.5, 2, 4.3]
+    elif 'img3' in img_path or 'img4' in img_path:
+        cam_pos = [0, -1.5, 3.5]
         cam_lookat = [0, 0, 0]
+
+        return cam_pos, cam_lookat
+    elif 'img5' in img_path:
+        cam_pos = [3, 3, -3]
+        cam_lookat = [0, -0.6, -2]
 
         return cam_pos, cam_lookat
 

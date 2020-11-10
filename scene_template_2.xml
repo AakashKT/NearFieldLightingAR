@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<scene version="2.0.0">
+    <integrator type="path">
+    </integrator>
+    
+    <sensor type="perspective" id="camera"> 
+        <float name="fov" value="40"/>
+        <transform name="to_world">
+            <!-- <matrix value="0.29 -0.51 -0.8 5.27 0.51 -0.62 0.58 -1.81 -0.8 -0.58 0.07 2.03 0 0 0 1"/> -->
+			<lookat target="-1, -1, -1"
+                    origin="0, 0, 0"
+                    up="0, 1, 0"/>
+        </transform>
+        
+        <sampler type="independent">
+            <integer name="sample_count" value="10"/>
+        </sampler>
+        
+        <film type="hdrfilm" id="film">
+            <integer name="width" value="480"/>
+            <integer name="height" value="270"/>
+            <string name="pixel_format" value="rgb"/>
+        </film>
+    </sensor>
+
+    <emitter type="constant" id="emitter-envmap">
+        <float name="radiance" value="0.1" />
+    </emitter>
+    
+    <shape version="2.0.0" type="ply" id="obj_1">
+        <string name="filename" value="/media/aakash/wd2/nyu_v2/mine/dense/meshed-poisson.ply"/>
+        <bsdf type="diffuse">
+            <!-- <texture type="mesh_attribute" name="reflectance">
+				<string name="name" value="vertex_color"/>
+			</texture> -->
+        </bsdf>
+    </shape>
+
+</scene>
